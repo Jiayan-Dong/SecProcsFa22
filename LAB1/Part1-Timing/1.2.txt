@@ -1,26 +1,26 @@
 # Put all sizes in bytes and times in cycles
 
 Cache Line Size:
-L1: 64
-L2:
-L3:
+L1: 64 Bytes
+L2: 64 Bytes
+L3: 64 Bytes
 
 Total Size:
-L1:
-L2:
-L3:
+L1: 16 KB = 8 KB (iCache) + 8 KB (iCache)
+L2: 256 KB
+L3: 8 MB
 
 Number of Ways:
-L1:
-L2:
-L3:
+L1: 1 K = 512 (iCache) + 512 (iCache)
+L2: 4 K
+L3: 128 K
 
 Number of Sets:
-L1:
-L2:
-L3:
+L1: 128 = 64 (iCache) + 64 (iCache)
+L2: 512
+L3: 8 K
 
 Latency:
-L1:
-L2:
-L3:
+L1: 4 Cycles
+L2: 12 Cycles
+L3: 30 Cycles
