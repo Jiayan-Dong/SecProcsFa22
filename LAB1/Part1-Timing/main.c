@@ -22,7 +22,7 @@ int main (int ac, char **av) {
     // Allocate a buffer of 64 Bytes
     // the size of an unsigned integer (uint64_t) is 8 Bytes
     // Therefore, we request 8 * 8 Bytes
-    uint64_t *target_buffer = (uint64_t *)malloc(8*8*1024*sizeof(uint64_t));
+    uint64_t *target_buffer = (uint64_t *)malloc(8*16*1024*sizeof(uint64_t));
 
     if (NULL == target_buffer) {
         perror("Unable to malloc");
@@ -62,7 +62,7 @@ int main (int ac, char **av) {
         
         for (int j = 0; j < 16; j++)
         {
-            for (int k = 1; k <= 8; k++)
+            for (int k = 1; k <= 16; k++)
             {
                 tmp = target_buffer[k * 8 * 64];
             }
@@ -81,7 +81,7 @@ int main (int ac, char **av) {
         
         for (int j = 0; j < 16; j++)
         {
-            for (int k = 1; k <= 8; k++)
+            for (int k = 1; k <= 16; k++)
             {
                 tmp = target_buffer[k * 8 * 512];
             }
