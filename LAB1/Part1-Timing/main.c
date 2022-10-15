@@ -1,9 +1,9 @@
 #include "utility.h"
 
-// TODO: Uncomment the following lines and fill in the correct size
-//#define L1_SIZE [TODO]
-//#define L2_SIZE [TODO]
-//#define L3_SIZE [TODO]
+// Uncomment the following lines and fill in the correct size
+#define L1_SIZE 16 * 1024
+#define L2_SIZE 256 * 1024
+#define L3_SIZE 8 * 1024 * 1024
  
 int main (int ac, char **av) {
 
@@ -22,7 +22,7 @@ int main (int ac, char **av) {
     // Allocate a buffer of 64 Bytes
     // the size of an unsigned integer (uint64_t) is 8 Bytes
     // Therefore, we request 8 * 8 Bytes
-    uint64_t *target_buffer = (uint64_t *)malloc(8*sizeof(uint64_t));
+    uint64_t *target_buffer = (uint64_t *)malloc(8*sizeof(uint64_t)*1024);
 
     if (NULL == target_buffer) {
         perror("Unable to malloc");
@@ -45,17 +45,51 @@ int main (int ac, char **av) {
     // ======
     // [1.4] TODO: Measure DRAM Latency, store results in dram_latency array
     // ======
-    //
+    for (int i=0; i<SAMPLES; i++){
+        // Step 1: clflush the target cache line into DRAM by calling clflush
+        clflush((void *)target_buffer);
+
+        // Step 2: measure the access latency
+        dram_latency[i] = measure_one_block_access_time((uint64_t)target_buffer);
+    }
 
     // ======
     // [1.4] TODO: Measure L2 Latency, store results in l2_latency array
     // ======
-    //
+    for (int i=0; i<SAMPLES; i++){
+        // Step 1: bring the target cache line into L2 by TODO
+        tmp = target_buffer[0];
+        
+        for (int j = 0; j < 16; j++)
+        {
+            for (int k = 1; k <= 8; k++)
+            {
+                tmp = target_buffer[k * 64];
+            }
+        }
+        
+        // Step 2: measure the access latency
+        l2_latency[i] = measure_one_block_access_time((uint64_t)target_buffer);
+    }
 
     // ======
     // [1.4] TODO: Measure L3 Latency, store results in l3_latency array
     // ======
-    //
+    for (int i=0; i<SAMPLES; i++){
+        // Step 1: bring the target cache line into L3 by TODO
+        tmp = target_buffer[0];
+        
+        for (int j = 0; j < 16; j++)
+        {
+            for (int k = 1; k <= 8; k++)
+            {
+                tmp = target_buffer[k * 512];
+            }
+        }
+
+        // Step 2: measure the access latency
+        l3_latency[i] = measure_one_block_access_time((uint64_t)target_buffer);
+    }
 
 
     // Print the results to the screen
