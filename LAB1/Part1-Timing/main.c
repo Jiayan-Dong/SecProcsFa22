@@ -37,7 +37,7 @@ int main (int ac, char **av) {
     for (int i=0; i<SAMPLES; i++){
         // Step 1: bring the target cache line into L1 by simply accessing the line
         tmp = target_buffer[0];
-
+        lfence();
         // Step 2: measure the access latency
         l1_latency[i] = measure_one_block_access_time((uint64_t)target_buffer);
     }
@@ -48,7 +48,7 @@ int main (int ac, char **av) {
     for (int i=0; i<SAMPLES; i++){
         // Step 1: clflush the target cache line into DRAM by calling clflush
         clflush((void *)target_buffer);
-
+        lfence();
         // Step 2: measure the access latency
         dram_latency[i] = measure_one_block_access_time((uint64_t)target_buffer);
     }
@@ -59,7 +59,7 @@ int main (int ac, char **av) {
     for (int i=0; i<SAMPLES; i++){
         // Step 1: bring the target cache line into L2 by TODO
         tmp = target_buffer[0];
-        
+        lfence();
         for (int j = 0; j < 16; j++)
         {
             for (int k = 1; k <= 16; k++)
@@ -67,7 +67,7 @@ int main (int ac, char **av) {
                 tmp = target_buffer[k * 8 * 64];
             }
         }
-        
+        lfence();
         // Step 2: measure the access latency
         l2_latency[i] = measure_one_block_access_time((uint64_t)target_buffer);
     }
@@ -78,7 +78,7 @@ int main (int ac, char **av) {
     for (int i=0; i<SAMPLES; i++){
         // Step 1: bring the target cache line into L3 by TODO
         tmp = target_buffer[0];
-        
+        lfence();
         for (int j = 0; j < 16; j++)
         {
             for (int k = 1; k <= 16; k++)
@@ -86,7 +86,7 @@ int main (int ac, char **av) {
                 tmp = target_buffer[k * 8 * 512];
             }
         }
-
+        lfence();
         // Step 2: measure the access latency
         l3_latency[i] = measure_one_block_access_time((uint64_t)target_buffer);
     }
