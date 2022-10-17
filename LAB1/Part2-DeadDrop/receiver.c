@@ -41,8 +41,10 @@ int main(int argc, char **argv)
 			// Probe
 			for (int j = 0; j < 8; i++)
 			{
-				if(measure_one_block_access_time((uint64_t) &((char *)buf)[(i << 6) + (j << 15)]) > 77)
-					printf("%u\n", i);
+				uint32_t t = measure_one_block_access_time((uint64_t) &((char *)buf)[(i << 6) + (j << 15)]);
+				// if(t > 77)
+				// 	printf("%u\n", i);
+				print("%du\n", t);
 			}
 		}
 	}
