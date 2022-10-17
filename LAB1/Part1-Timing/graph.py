@@ -44,6 +44,6 @@ fig_all.legend()
 
 os.makedirs("graphs", exist_ok=True)
 now = datetime.now() 
-date_time = now.strftime("%m:%d:%Y_%H:%M:%S")
+date_time = now.strftime("%m-%d-%Y_%H-%M-%S")
 fig_all.savefig(str("graphs/"+date_time+".pdf"))
 plt.close(fig_all)
