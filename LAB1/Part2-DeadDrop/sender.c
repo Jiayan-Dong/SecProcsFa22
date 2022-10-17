@@ -21,11 +21,12 @@ int main(int argc, char **argv)
   // page allocation, TLB insertion, etc.
   // Thus, we use a dummy write here to trigger page allocation
   // so later access will not suffer from such overhead.
-  //*((char *)buf) = 1; // dummy write to trigger page allocation
-
+  *((char *)buf) = 1; // dummy write to trigger page allocation
+  printf("%p\n", buf);
 
   // TODO:
   // Put your covert channel setup code here
+  volatile unsigned char tmp_chr;
 
   printf("Please type a message.\n");
 
@@ -33,7 +34,9 @@ int main(int argc, char **argv)
   while (sending) {
       char text_buf[128];
       fgets(text_buf, sizeof(text_buf), stdin);
-
+      tmp_chr = atoi(text_buf);
+      // tmp_chr = ((unsigned char *)buf)[tmp_chr << 6];
+      printf("%p\n", &((unsigned char *)buf)[tmp_chr << 6]);
       // TODO:
       // Put your covert channel code here
   }
