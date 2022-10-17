@@ -1,7 +1,7 @@
 #include "utility.h"
 
 // Uncomment the following lines and fill in the correct size
-#define L1_SIZE 16 * 1024
+#define L1_SIZE 32 * 1024
 #define L2_SIZE 256 * 1024
 #define L3_SIZE 8 * 1024 * 1024
  
@@ -59,9 +59,9 @@ int main (int ac, char **av) {
         tmp = target_buffer[0];
         for (int j = 0; j < 16; j++)
         {
-            for (int k = 1; k <= 12; k++)
+            for (int k = 1; k <= 1024; k++)
             {
-                tmp = target_buffer[k * 8 * 64];
+                tmp = target_buffer[k * 8];
             }
         }
         // Step 2: measure the access latency
@@ -76,9 +76,9 @@ int main (int ac, char **av) {
         tmp = target_buffer[0];
         for (int j = 0; j < 16; j++)
         {
-            for (int k = 1; k <= 12; k++)
+            for (int k = 1; k <= 8192; k++)
             {
-                tmp = target_buffer[k * 8 * 512];
+                tmp = target_buffer[k * 8];
             }
         }
         // Step 2: measure the access latency
