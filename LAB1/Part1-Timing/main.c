@@ -20,9 +20,9 @@ int main(int ac, char **av)
     // register- it should always try to load from memory/ cache.
     volatile char tmp;
 
-    // Allocate a buffer of 64 Bytes
+    // Allocate a buffer of 1024 * 1024 * 8 Bytes (8 MB)
     // the size of an unsigned integer (uint64_t) is 8 Bytes
-    // Therefore, we request 8 * 8 Bytes
+    // Therefore, we request 1024 * 1024 * 8 Bytes (8 MB)
     uint64_t *target_buffer = (uint64_t *)malloc((1024 * 1024) * sizeof(uint64_t));
 
     if (NULL == target_buffer)
@@ -61,7 +61,7 @@ int main(int ac, char **av)
     for (int i = 0; i < SAMPLES; i++)
     {
         // Step 1: bring the target cache line into L2 by TODO
-        for (int j = 0; j < 1024 * 4; j++) // 4K lines
+        for (int j = 0; j < 1024 * 4; j++) // 4 K lines
         {
             tmp = target_buffer[j * 8];
         }
@@ -75,7 +75,7 @@ int main(int ac, char **av)
     for (int i = 0; i < SAMPLES; i++)
     {
         // Step 1: bring the target cache line into L3 by TODO
-        for (int j = 0; j < 1024 * 128; j++) // 128K lines
+        for (int j = 0; j < 1024 * 128; j++) // 128 K lines
         {
             tmp = target_buffer[j * 8];
         }

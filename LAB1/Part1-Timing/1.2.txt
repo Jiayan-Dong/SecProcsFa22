@@ -11,9 +11,9 @@ L2: 256 KB
 L3: 8 MB
 
 Number of Ways:
-L1: 1 K = 512 (iCache) + 512 (iCache)
-L2: 4 K
-L3: 128 K
+L1: 8
+L2: 8
+L3: 16
 
 Number of Sets:
 L1: 128 = 64 (iCache) + 64 (iCache)
