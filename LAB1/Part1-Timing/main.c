@@ -62,7 +62,7 @@ int main(int ac, char **av)
     {
         // Step 1: bring the target cache line into L2 by TODO
         tmp = target_buffer[0];
-        for (int j = 0; j < 1024; j++)
+        for (int j = 0; j < 512; j++) // 1024 lines
         {
             tmp = target_buffer[j * 8];
         }
@@ -77,7 +77,7 @@ int main(int ac, char **av)
     {
         // Step 1: bring the target cache line into L3 by TODO
         tmp = target_buffer[0];
-        for (int j = 0; j < 1024 * 64; j++)
+        for (int j = 0; j < 1024 * 4; j++) // 4 K lines
         {
             tmp = target_buffer[j * 8];
         }
