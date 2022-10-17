@@ -19,8 +19,17 @@
 #define ADDR_PTR uint64_t 
 #define CYCLES uint32_t
 
-static inline uint32_t rdtscp();
-static inline uint64_t rdtscp64();
+static inline uint32_t rdtscp() {
+    uint32_t rv;
+    asm volatile ("rdtscp": "=a" (rv) :: "edx", "ecx");
+    return rv;
+}
+
+static inline uint64_t rdtscp64() {
+    uint32_t low, high;
+    asm volatile ("rdtscp": "=a" (low), "=d" (high) :: "ecx");
+    return (((uint64_t)high) << 32) | low;
+}
 
 CYCLES measure_one_block_access_time(ADDR_PTR addr);
 

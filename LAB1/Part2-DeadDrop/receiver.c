@@ -33,19 +33,19 @@ int main(int argc, char **argv)
 		for (unsigned char i = 0; i < 256; i++)
 		{
 			// Prime
-			for (int j = 0; j < 8; j++)
+			for (int j = 0; j < 1; j++)
 			{
 				tmp_chr = ((char *)buf)[(i << 6) + (j << 15)];
 			}
 
 			uint64_t t0 = rdtscp64();
-			while (rdtscp64() - t0 < 1000)
+			while (rdtscp64() - t0 < 3000000000)
 			{
 				/* code */
 			}
 			
 			// Probe
-			for (int j = 0; j < 8; j++)
+			for (int j = 0; j < 1; j++)
 			{
 				uint32_t t = measure_one_block_access_time((uint64_t) &((char *)buf)[(i << 6) + (j << 15)]);
 				// if(t > 77)
