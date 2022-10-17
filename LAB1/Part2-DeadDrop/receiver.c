@@ -30,27 +30,36 @@ int main(int argc, char **argv)
 	while (listening)
 	{
 		// Put your covert channel code here
-		for (unsigned char i = 0; i < 256; i++)
+		for (int i = 0; i < 256; i++)
 		{
 			// Prime
-			for (int j = 0; j < 1; j++)
+			for (int j = 0; j < 8; j++)
 			{
 				tmp_chr = ((char *)buf)[(i << 6) + (j << 15)];
 			}
 
 			uint64_t t0 = rdtscp64();
-			while (rdtscp64() - t0 < 3000000000)
+			while (rdtscp64() - t0 < 3000)
 			{
 				/* code */
 			}
-			
-			// Probe
-			for (int j = 0; j < 1; j++)
+			// Prime And Probe
+			int hit = 0;
+			int miss = 0;
+			for (size_t k = 0; k < 1000000; k++)
 			{
-				uint32_t t = measure_one_block_access_time((uint64_t) &((char *)buf)[(i << 6) + (j << 15)]);
-				// if(t > 77)
-				// 	printf("%u\n", i);
-				printf("%d\n", t);
+				for (int j = 0; j < 8; j++)
+				{
+					uint32_t t = measure_one_block_access_time((uint64_t) & ((char *)buf)[(i << 6) + (j << 15)]);
+					if (t > 77)
+						miss++;
+					else
+						hit++;
+				}
+				if (miss > hit)
+				{
+					printf("%u\n", i);
+				}
 			}
 		}
 	}

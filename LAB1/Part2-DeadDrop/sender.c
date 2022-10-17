@@ -1,21 +1,22 @@
 
-#include"util.h"
+#include "util.h"
 // mman library to be used for hugepage allocations (e.g. mmap or posix_memalign only)
 #include <sys/mman.h>
 
 // TODO: define your own buffer size
-#define BUFF_SIZE (1<<21)
+#define BUFF_SIZE (1 << 21)
 //#define BUFF_SIZE [TODO]
 
 int main(int argc, char **argv)
 {
   // Allocate a buffer using huge page
   // See the handout for details about hugepage management
-  void *buf= mmap(NULL, BUFF_SIZE, PROT_READ | PROT_WRITE, MAP_POPULATE | MAP_ANONYMOUS | MAP_PRIVATE | MAP_HUGETLB, -1, 0);
-  
-  if (buf == (void*) - 1) {
-     perror("mmap() error\n");
-     exit(EXIT_FAILURE);
+  void *buf = mmap(NULL, BUFF_SIZE, PROT_READ | PROT_WRITE, MAP_POPULATE | MAP_ANONYMOUS | MAP_PRIVATE | MAP_HUGETLB, -1, 0);
+
+  if (buf == (void *)-1)
+  {
+    perror("mmap() error\n");
+    exit(EXIT_FAILURE);
   }
   // The first access to a page triggers overhead associated with
   // page allocation, TLB insertion, etc.
@@ -31,18 +32,24 @@ int main(int argc, char **argv)
   printf("Please type a message.\n");
 
   bool sending = true;
-  while (sending) {
-      char text_buf[128];
-      fgets(text_buf, sizeof(text_buf), stdin);
-      tmp_chr = atoi(text_buf);
-      // tmp_chr = ((unsigned char *)buf)[tmp_chr << 6];
-      printf("%p\n", &((unsigned char *)buf)[tmp_chr << 6]);
-      // TODO:
-      // Put your covert channel code here
+  while (sending)
+  {
+    char text_buf[128];
+    fgets(text_buf, sizeof(text_buf), stdin);
+    tmp_chr = atoi(text_buf);
+    tmp_chr = ((unsigned char *)buf)[tmp_chr << 6];
+    uint64_t t0 = rdtscp64();
+    while (rdtscp64() - t0 < 3000)
+    {
+      for (int j = 0; j < 8; j++)
+      {
+        tmp_chr = ((char *)buf)[(tmp_chr << 6) + (j << 18)];
+      }
+    }
+    // TODO:
+    // Put your covert channel code here
   }
 
   printf("Sender finished.\n");
   return 0;
 }
-
-
