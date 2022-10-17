@@ -33,7 +33,7 @@ int main(int argc, char **argv)
 		for (unsigned char i = 0; i < 256; i++)
 		{
 			// Prime
-			for (int j = 0; j < 8; i++)
+			for (int j = 0; j < 8; j++)
 			{
 				tmp_chr = ((char *)buf)[(i << 6) + (j << 15)];
 			}
@@ -45,12 +45,12 @@ int main(int argc, char **argv)
 			}
 			
 			// Probe
-			for (int j = 0; j < 8; i++)
+			for (int j = 0; j < 8; j++)
 			{
 				uint32_t t = measure_one_block_access_time((uint64_t) &((char *)buf)[(i << 6) + (j << 15)]);
 				// if(t > 77)
 				// 	printf("%u\n", i);
-				print("%du\n", t);
+				printf("%d\n", t);
 			}
 		}
 	}
