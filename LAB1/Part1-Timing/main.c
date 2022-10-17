@@ -1,7 +1,7 @@
 #include "utility.h"
 
 // Uncomment the following lines and fill in the correct size
-#define L1_SIZE 32 * 1024
+#define L1_SIZE 16 * 1024
 #define L2_SIZE 256 * 1024
 #define L3_SIZE 8 * 1024 * 1024
  
@@ -22,7 +22,7 @@ int main (int ac, char **av) {
     // Allocate a buffer of 64 Bytes
     // the size of an unsigned integer (uint64_t) is 8 Bytes
     // Therefore, we request 8 * 8 Bytes
-    uint64_t *target_buffer = (uint64_t *)malloc((12*8*512+1)*sizeof(uint64_t));
+    uint64_t *target_buffer = (uint64_t *)malloc((16*8*1024+1)*sizeof(uint64_t));
 
     if (NULL == target_buffer) {
         perror("Unable to malloc");
@@ -59,9 +59,9 @@ int main (int ac, char **av) {
         tmp = target_buffer[0];
         for (int j = 0; j < 16; j++)
         {
-            for (int k = 1; k <= 1024; k++)
+            for (int k = 1; k <= 12; k++)
             {
-                tmp = target_buffer[k * 8];
+                tmp = target_buffer[k * 8 * 64];
             }
         }
         // Step 2: measure the access latency
@@ -76,9 +76,9 @@ int main (int ac, char **av) {
         tmp = target_buffer[0];
         for (int j = 0; j < 16; j++)
         {
-            for (int k = 1; k <= 8192; k++)
+            for (int k = 1; k <= 16; k++)
             {
-                tmp = target_buffer[k * 8];
+                tmp = target_buffer[k * 8 * 1024];
             }
         }
         // Step 2: measure the access latency
