@@ -19,6 +19,9 @@
 #define ADDR_PTR uint64_t 
 #define CYCLES uint32_t
 
+static inline uint32_t rdtscp();
+static inline uint64_t rdtscp64();
+
 CYCLES measure_one_block_access_time(ADDR_PTR addr);
 
 // You Should Not Use clflush in your final submission
