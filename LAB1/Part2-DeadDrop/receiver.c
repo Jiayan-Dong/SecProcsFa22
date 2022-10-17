@@ -38,6 +38,12 @@ int main(int argc, char **argv)
 				tmp_chr = ((char *)buf)[(i << 6) + (j << 15)];
 			}
 
+			uint64_t t0 = rdtscp64();
+			while (rdtscp64() - t0 < 1000)
+			{
+				/* code */
+			}
+			
 			// Probe
 			for (int j = 0; j < 8; i++)
 			{

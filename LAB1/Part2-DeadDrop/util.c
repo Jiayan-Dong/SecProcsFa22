@@ -1,6 +1,22 @@
 
 #include "util.h"
 
+// Function to read the time stamp counter, which is called tsc for short
+// "rdtscpp" returns a 32bit unsigned integer
+// "rdtscpp64" return a 64 bit unsigned integer
+// Details in https://www.felixcloutier.com/x86/rdtscpp
+static inline uint32_t rdtscp() {
+    uint32_t rv;
+    asm volatile ("rdtscp": "=a" (rv) :: "edx", "ecx");
+    return rv;
+}
+
+static inline uint64_t rdtscp64() {
+    uint32_t low, high;
+    asm volatile ("rdtscp": "=a" (low), "=d" (high) :: "ecx");
+    return (((uint64_t)high) << 32) | low;
+}
+
 /* Measure the time it takes to access a block with virtual address addr. */
 CYCLES measure_one_block_access_time(ADDR_PTR addr)
 {
