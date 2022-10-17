@@ -6,7 +6,7 @@ L2: 64 Bytes
 L3: 64 Bytes
 
 Total Size:
-L1: 16 KB = 8 KB (iCache) + 8 KB (iCache)
+L1: 64 KB = 32 KB (iCache) + 32 KB (iCache)
 L2: 256 KB
 L3: 8 MB
 
