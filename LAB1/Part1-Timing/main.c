@@ -62,9 +62,9 @@ int main(int ac, char **av)
     {
         // Step 1: bring the target cache line into L2 by TODO
         tmp = target_buffer[0];
-        for (int j = 0; j < 1024 * 2; j++)
+        for (int j = 0; j < 1024; j++)
         {
-            tmp = target_buffer[j * 256];
+            tmp = target_buffer[j * 8];
         }
         // Step 2: measure the access latency
         l2_latency[i] = measure_one_block_access_time((uint64_t)target_buffer);
@@ -77,9 +77,9 @@ int main(int ac, char **av)
     {
         // Step 1: bring the target cache line into L3 by TODO
         tmp = target_buffer[0];
-        for (int j = 0; j < 1024 * 512; j++)
+        for (int j = 0; j < 1024 * 64; j++)
         {
-            tmp = target_buffer[j];
+            tmp = target_buffer[j * 8];
         }
         // Step 2: measure the access latency
         l3_latency[i] = measure_one_block_access_time((uint64_t)target_buffer);
