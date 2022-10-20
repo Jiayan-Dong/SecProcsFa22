@@ -20,10 +20,18 @@ int main(int ac, char **av)
     // register- it should always try to load from memory/ cache.
     volatile char tmp;
 
+    for (size_t i = 0; i < 10000000; i++)
+    {
+        for (size_t j = 0; j < 8; j++)
+        {
+            tmp++;
+        }
+    }
+
     // Allocate a buffer of 1024 * 1024 * 8 Bytes (8 MB)
     // the size of an unsigned integer (uint64_t) is 8 Bytes
     // Therefore, we request 1024 * 1024 * 8 Bytes (8 MB)
-    uint64_t *target_buffer = (uint64_t *)malloc((1024 * 1024) * sizeof(uint64_t));
+    uint64_t *target_buffer = (uint64_t *)malloc((1024 * 1024 * 2) * sizeof(uint64_t));
 
     if (NULL == target_buffer)
     {
@@ -31,18 +39,18 @@ int main(int ac, char **av)
         return EXIT_FAILURE;
     }
 
-    // [1.4] TODO: Uncomment the following line to allocate a buffer of a size
-    // of your chosing. This will help you measure the latencies at L2 and L3.
-    // uint64_t *eviction_buffer = (uint64_t)malloc(TODO);
-
     // Example: Measure L1 access latency, store results in l1_latency array
     for (int i = 0; i < SAMPLES; i++)
     {
         // Step 1: bring the target cache line into L1 by simply accessing the line
         tmp = target_buffer[0];
         // Step 2: measure the access latency
-        l1_latency[i] = measure_one_block_access_time((uint64_t)target_buffer);
+        l1_latency[i] = measure_one_block_access_time((uint64_t)target_buffer); // dependency ???
     }
+
+    // [1.4] TODO: Uncomment the following line to allocate a buffer of a size
+    // of your chosing. This will help you measure the latencies at L2 and L3.
+    // uint64_t *eviction_buffer = (uint64_t)malloc(TODO);
 
     // ======
     // [1.4] TODO: Measure DRAM Latency, store results in dram_latency array
@@ -60,10 +68,14 @@ int main(int ac, char **av)
     // ======
     for (int i = 0; i < SAMPLES; i++)
     {
+        tmp = target_buffer[0];
         // Step 1: bring the target cache line into L2 by TODO
-        for (int j = 0; j < 1024 * 4; j++) // 4 K lines
+        for (int j = 1; j < 1024 * 8; j++) // 4 K lines
         {
-            tmp = target_buffer[j * 8];
+            for (size_t k = 0; k < 4; k++)
+            {
+                tmp = target_buffer[j * 8];
+            }
         }
         // Step 2: measure the access latency
         l2_latency[i] = measure_one_block_access_time((uint64_t)target_buffer);
@@ -74,10 +86,14 @@ int main(int ac, char **av)
     // ======
     for (int i = 0; i < SAMPLES; i++)
     {
+        tmp = target_buffer[0];
         // Step 1: bring the target cache line into L3 by TODO
-        for (int j = 0; j < 1024 * 128; j++) // 128 K lines
+        for (int j = 1; j < 1024 * 256; j++) // 128 K lines
         {
-            tmp = target_buffer[j * 8];
+            for (size_t k = 0; k < 4; k++)
+            {
+                tmp = target_buffer[j * 8];
+            }
         }
         // Step 2: measure the access latency
         l3_latency[i] = measure_one_block_access_time((uint64_t)target_buffer);
@@ -86,8 +102,8 @@ int main(int ac, char **av)
     // Print the results to the screen
     // [1.5] Change print_results to print_results_for_python so that your code will work
     // with the python plotter software
-    // print_results(dram_latency, l1_latency, l2_latency, l3_latency);
-    print_results_for_python(dram_latency, l1_latency, l2_latency, l3_latency);
+    print_results(dram_latency, l1_latency, l2_latency, l3_latency);
+    // print_results_for_python(dram_latency, l1_latency, l2_latency, l3_latency);
 
     free(target_buffer);
 

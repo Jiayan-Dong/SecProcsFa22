@@ -7,6 +7,16 @@
 
 int main(int argc, char **argv)
 {
+	volatile char tmp;
+
+	for (size_t i = 0; i < 20000000; i++)
+	{
+		for (size_t j = 0; j < 8; j++)
+		{
+			tmp++;
+		}
+	}
+
 	// Put your covert channel setup code here
 	void *buf = mmap(NULL, BUFF_SIZE, PROT_READ | PROT_WRITE, MAP_POPULATE | MAP_ANONYMOUS | MAP_PRIVATE | MAP_HUGETLB, -1, 0);
 
@@ -27,41 +37,41 @@ int main(int argc, char **argv)
 	printf("Receiver now listening.\n");
 
 	bool listening = true;
+
+	uint64_t *target_buffer = (uint64_t *)buf;
+	CYCLES probe_time[8] = {0};
+	double sum[256] = {0};
+
 	while (listening)
 	{
 		// Put your covert channel code here
 		for (int i = 0; i < 256; i++)
 		{
+
 			// Prime
 			for (int j = 0; j < 8; j++)
 			{
-				tmp_chr = ((char *)buf)[(i << 6) + (j << 15)];
+				for (size_t k = 0; k < 8; k++)
+				{
+					tmp_chr = *(unsigned char *)((uint64_t)buf + (i << 6) + (j << 15));
+				}
 			}
 
-			uint64_t t0 = rdtscp64();
-			while (rdtscp64() - t0 < 3000)
+
+			double local_sum = 0;
+			// Probe
+			for (int j = 0; j < 8; j++)
 			{
-				/* code */
+				local_sum += measure_one_block_access_time((uint64_t)buf + (i << 6) + (j << 15));
+				sum[i] = sum[i] * 0.9999 + local_sum * 0.0001;
 			}
-			// Prime And Probe
-			int hit = 0;
-			int miss = 0;
-			for (size_t k = 0; k < 1000000; k++)
-			{
-				for (int j = 0; j < 8; j++)
-				{
-					uint32_t t = measure_one_block_access_time((uint64_t) & ((char *)buf)[(i << 6) + (j << 15)]);
-					if (t > 77)
-						miss++;
-					else
-						hit++;
-				}
-				if (miss > hit)
-				{
-					printf("%u\n", i);
-				}
-			}
+
+			// if (sum[i] > 230)
+			// {
+			// 	printf("%d\n", i);
+			// }
 		}
+		printf("%f\n", sum[0]);
 	}
 
 	printf("Receiver finished.\n");

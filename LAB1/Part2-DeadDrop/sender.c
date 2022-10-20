@@ -29,25 +29,28 @@ int main(int argc, char **argv)
   // Put your covert channel setup code here
   volatile unsigned char tmp_chr;
 
+  register int num;
+
   printf("Please type a message.\n");
 
   bool sending = true;
   while (sending)
   {
     char text_buf[128];
+    printf("< ");
     fgets(text_buf, sizeof(text_buf), stdin);
-    tmp_chr = atoi(text_buf);
-    tmp_chr = ((unsigned char *)buf)[tmp_chr << 6];
-    uint64_t t0 = rdtscp64();
-    while (rdtscp64() - t0 < 3000)
+    num = atoi(text_buf);
+
+    for (size_t i = 0; i < 1000000;i)
     {
-      for (int j = 0; j < 8; j++)
+      for (int j = 32; j < 64; j++)
       {
-        tmp_chr = ((char *)buf)[(tmp_chr << 6) + (j << 18)];
+        for (size_t k = 0; k < 8; k++)
+        {
+          tmp_chr = *(unsigned char *)((uint64_t)buf + (num << 6) + (j << 15));
+        }
       }
     }
-    // TODO:
-    // Put your covert channel code here
   }
 
   printf("Sender finished.\n");

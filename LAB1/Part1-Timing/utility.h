@@ -9,22 +9,22 @@
 #ifndef __UTILITY_H__
 #define __UTILITY_H__
 
-#define SAMPLES 10
+#define SAMPLES 10000
 
 
 // Function to read the time stamp counter, which is called tsc for short
 // "rdtscpp" returns a 32bit unsigned integer
 // "rdtscpp64" return a 64 bit unsigned integer
 // Details in https://www.felixcloutier.com/x86/rdtscpp
-static inline uint32_t rdtscpp() {
+static inline uint32_t rdtscp() {
     uint32_t rv;
-    asm volatile ("rdtscpp": "=a" (rv) :: "edx", "ecx");
+    asm volatile ("rdtscp": "=a" (rv) :: "edx", "ecx");
     return rv;
 }
 
-static inline uint64_t rdtscpp64() {
+static inline uint64_t rdtscp64() {
     uint32_t low, high;
-    asm volatile ("rdtscpp": "=a" (low), "=d" (high) :: "ecx");
+    asm volatile ("rdtscp": "=a" (low), "=d" (high) :: "ecx");
     return (((uint64_t)high) << 32) | low;
 }
 
