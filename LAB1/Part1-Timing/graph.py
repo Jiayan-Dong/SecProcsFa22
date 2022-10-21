@@ -5,7 +5,8 @@ import numpy as np
 from tqdm import tqdm
 from datetime import datetime
 
-num_runs = 100
+# num_runs = 100
+num_runs = 10
 dict_of_dict_of_lists = dict()
 
 graph_repo="data"
@@ -35,6 +36,9 @@ fig_all = plt.figure(figsize=(11.25, 7.5))
 ax_all  = fig_all.add_subplot(1,1,1)
 ax_all.set_xlabel("Access Time")
 ax_all.set_ylabel("Number of Samples")
+
+# ax_all.set_title("Reference solution")
+ax_all.set_title("My solution")
 
 ax_all.hist(l1_all,  label="L1",   bins=np.arange(0, 300 ), alpha=0.5) 
 ax_all.hist(l2_all,  label="L2",   bins=np.arange(0, 300 ), alpha=0.5) 

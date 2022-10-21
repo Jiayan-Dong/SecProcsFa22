@@ -13,7 +13,8 @@ executable_filename = ['make', 'run']
 # Run reference code:
 # executable_filename = ['make', 'run-reference']
 
-num_runs = 100
+# num_runs = 100
+num_runs = 10
 
 graph_repo = "data"
 os.makedirs(graph_repo, exist_ok=True)
