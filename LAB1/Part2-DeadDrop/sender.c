@@ -1,11 +1,12 @@
+// Name: Jiayan Dong
+// Last Modified: 10/20/2022
+// Prime and probe sender for Ivy Bridge L1/L2, 32 KB - 256 KB - 8 MB
 
 #include "util.h"
 // mman library to be used for hugepage allocations (e.g. mmap or posix_memalign only)
 #include <sys/mman.h>
 
-// TODO: define your own buffer size
 #define BUFF_SIZE (1 << 21)
-//#define BUFF_SIZE [TODO]
 
 int main(int argc, char **argv)
 {
@@ -23,13 +24,13 @@ int main(int argc, char **argv)
   // Thus, we use a dummy write here to trigger page allocation
   // so later access will not suffer from such overhead.
   *((char *)buf) = 1; // dummy write to trigger page allocation
-  printf("%p\n", buf);
 
-  // TODO:
-  // Put your covert channel setup code here
+  // Covert channel setup code here
   volatile unsigned char tmp_chr;
 
   register int num;
+
+  register uint64_t t0, t1;
 
   printf("Please type a message.\n");
 
@@ -40,17 +41,24 @@ int main(int argc, char **argv)
     printf("< ");
     fgets(text_buf, sizeof(text_buf), stdin);
     num = atoi(text_buf);
-
-    for (size_t i = 0; i < 1000000;i)
+    if (num < 0 || num > 255)
     {
-      for (int j = 32; j < 64; j++)
+      printf("Please enter 0 - 255 (8 bit number)\n");
+      continue;
+    }
+    
+    t0 = rdtscp64();
+    do
+    {
+      for (int j = 32; j < 64; j++) // Takes < 4000 cycles
       {
         for (size_t k = 0; k < 8; k++)
         {
           tmp_chr = *(unsigned char *)((uint64_t)buf + (num << 6) + (j << 15));
         }
       }
-    }
+      t1 = rdtscp64();
+    } while (t1 - t0 < 800000000); // 200 signals to receiver
   }
 
   printf("Sender finished.\n");
