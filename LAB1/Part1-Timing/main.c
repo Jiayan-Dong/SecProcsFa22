@@ -30,9 +30,9 @@ int main(int ac, char **av)
         }
     }
 
-    // Allocate a buffer of 1024 * 1024 * 8 Bytes (8 MB)
+    // Allocate a buffer of 1024 * 1024 * 16 Bytes (16 MB)
     // the size of an unsigned integer (uint64_t) is 8 Bytes
-    // Therefore, we request 1024 * 1024 * 8 Bytes (8 MB)
+    // Therefore, we request 1024 * 1024 * 16 Bytes (16 MB)
     uint64_t *target_buffer = (uint64_t *)malloc((1024 * 1024 * 2) * sizeof(uint64_t));
 
     if (NULL == target_buffer)
