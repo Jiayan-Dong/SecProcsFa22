@@ -11,7 +11,7 @@
 #define MISS_THRESHOLD 400
 #define NOISE_THRESHOLD 500
 #define SAMPLE_NUM 256
-#define SAMPLE_THRESHOLD 150
+#define SAMPLE_THRESHOLD 120
 #define WAIT_IN_BETWEEN 15000
 
 int main(int argc, char **argv)
@@ -46,9 +46,9 @@ int main(int argc, char **argv)
 	bool listening = true;
 
 	double sum[SET_NUM] = {[0 ... 255] = 230}; // The cumulative average latency of the last ten times
-	register uint64_t t0, t1;			   // Cycle used to Synchronize
-	int received_num[SAMPLE_NUM];				   // The most recent sampled signals
-	int cnt = 0;						   // Counter
+	register uint64_t t0, t1;				   // Cycle used to Synchronize
+	int received_num[SAMPLE_NUM];			   // The most recent sampled signals
+	int cnt = 0;							   // Counter
 
 	// Initialize the most recent sampled signal
 	for (int i = 0; i < SAMPLE_NUM; i++)
@@ -72,7 +72,7 @@ int main(int argc, char **argv)
 			}
 
 			// Wait, sender send one signal in about 5000 cycles
-			uint64_t t0 = rdtscp64();
+			t0 = rdtscp64();
 			do
 			{
 				t1 = rdtscp64();
@@ -104,11 +104,16 @@ int main(int argc, char **argv)
 				// If it is greater than the threshold, the signal sent by the sender
 				if (local_cnt > SAMPLE_THRESHOLD)
 				{
-					printf("%d\n", i);
+					printf("%d\n", i); // Print out the received number
 					for (int j = 0; j < SAMPLE_NUM; j++)
 					{
-						received_num[j] = j; // Print out the received number
+						received_num[j] = j; 
 					}
+					t0 = rdtscp64();	// Ingore all the following singal on the same set
+					do
+					{
+						t1 = rdtscp64();
+					} while (t1 - t0 < 400000000);
 				}
 			}
 		}
