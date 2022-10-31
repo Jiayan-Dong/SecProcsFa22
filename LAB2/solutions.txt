@@ -1,0 +1,19 @@
+Part 1 Discussion Question:
+
+Discussion Question 1: How many addresses need to be flushed at the first step?
+Each character is 8 bit, so 2^8 = 256 addresses need to be flushed at the first step.
+
+Discussion Question 2: Now assume the attacker and victim no longer share a memory region. Would your attack still work? If not, changes could you need to make to make it work?
+If the attacker and victim no longer share a memory region, the current attack would not work.
+We need to find out the addresses that the victim may access, and then do flush and reload on these addresses in the attacker program.
+
+
+
+Part 2 Discussion Question:
+
+Discussion Question 3: In our example, the attacker tries to leak the values in the array secret_part2. In a real-world attack, people can use Spectre to leak arbitrary values in the victim’s address space. Explain how the attacker can achieve this.
+Because the attack is not limited to set the offset within the length of the array secret_part2 as bounds checks are ignored in case of speculative execution.
+So the real world attackers can set the arbitrary offset, which then gives them the ability to leak arbitrary values in the victim’s address space.
+
+Discussion Question 4: Try to tune the training parameters and answer this question: What is the fewest number of times you need to train the branch on line 9 in Listing 3 to make the attack work?
+The fewest number of times we need to train the branch on line 9 in Listing 3 to make the attack work is 2.
